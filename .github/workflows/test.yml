@@ -1,0 +1,56 @@
+name: Terraform CI/CD with OPA
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.tf'
+      - 'policies/*.rego'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*.tf'
+      - 'policies/*.rego'
+
+jobs:
+  terraform_plan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init and Plan
+      run: |
+        terraform init
+        terraform plan -out=tfplan
+
+    - name: Save Terraform Plan
+      run: terraform show -json tfplan > plan.json
+
+    - name: Install OPA
+      run: |
+        curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64
+        chmod +x opa
+
+    - name: OPA Policy Evaluation
+      run: |
+        ./opa eval --bundle policies.tar.gz --input plan.json "data.terraform.allow"
+
+  terraform_apply:
+    needs: terraform_plan
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Apply
+      run: |
+        terraform init
+        terraform apply -auto-approve tfplan
