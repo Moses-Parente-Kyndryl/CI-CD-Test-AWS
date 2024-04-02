@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "opa_instance" {
-  ami           = "ami-047869c10b5107b42"  # Replace with a valid AMI ID for your region
+  ami           = "ami-047869c10b5107b42"  
   instance_type = "t2.micro"
 
   tags = {
