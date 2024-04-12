@@ -45,10 +45,12 @@ jobs:
         curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64
         chmod +x opa
 
+    - name: Download OPA Policies
+      run: |
+        curl -L -o policies.tar.gz ${{ secrets.POLICY_URL }}
+
     - name: OPA Policy Evaluation
       run: ./opa eval --bundle policies.tar.gz --input plan.json "data.terraform.allow"
-      env: 
-        POLICY_PATH: 'https://github.com/Moses-Parente-Kyndryl/OPA-Bundles/releases/download/Brand_New_OPA_AWS_Bundle/opa-bundle.tar.gz'
 
   terraform_apply:
     needs: terraform_plan
@@ -70,3 +72,4 @@ jobs:
       run: |
         terraform init
         terraform apply -auto-approve tfplan
+
