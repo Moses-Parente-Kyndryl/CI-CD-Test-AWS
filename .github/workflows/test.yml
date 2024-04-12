@@ -46,8 +46,9 @@ jobs:
         chmod +x opa
 
     - name: OPA Policy Evaluation
-      run: |
-        ./opa eval --bundle policies.tar.gz --input plan.json "data.terraform.allow"
+      run: ./opa eval --bundle policies.tar.gz --input plan.json "data.terraform.allow"
+      env: 
+        POLICY_PATH: 'https://github.com/Moses-Parente-Kyndryl/OPA-Bundles/releases/download/Brand_New_OPA_AWS_Bundle/opa-bundle.tar.gz'
 
   terraform_apply:
     needs: terraform_plan
