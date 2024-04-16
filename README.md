@@ -173,14 +173,14 @@ jobs:
   Making even a small edit to your terraform files will trigger the github workflow. 
   
   If your policy check fails, you can review the actions in your Github
- Repo to find detailed logs of the workflow run
+ repository to find detailed logs of the workflow run
 
 
 ## Pontential Errors
 
 Be sure to check your Github Actions workflow for any errors. 
 
-A common bug that can happen is when your directory includes extended/hidden/unknown attributes in the tarfile.
+A common bug that can happen is when your directory includes extended/hidden/unknown attributes in the tarfile, which can happen when you are creating your bundles with a machine using MacOS. To fix this issue use the command `tar --exclude='._*' -czvf policies.tar.gz -C policies .` to clear the files of any attributes that can corrupt the bundle.
 
 ## Conclusion 
 
