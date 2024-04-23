@@ -7,7 +7,7 @@ resource "aws_instance" "opa_instance" {
   instance_type = "t2.micro"
 
   tags = {
-    Name = "OPA Instance"
+   ## Name = "OPA Instance"
   }
 }
 #Test_new_bundle_10000111
