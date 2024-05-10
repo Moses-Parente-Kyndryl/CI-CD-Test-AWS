@@ -1,27 +1,23 @@
 import os
 import sys
 
-def find_policy_by_tag(directory, target_tag):
-    """
-    Search through .rego files in the specified directory,
-    looking for a file that includes the specified tag in its header comments.
-    """
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".rego"):
-                path = os.path.join(root, file)
-                with open(path, 'r') as f:
-                    for line in f:
-                        if line.startswith('# Tags:') and target_tag in line:
-                            return path
+def find_policy(directory, tag):
+    """Search for policy files that contain a specific tag in their content."""
+    for file_name in os.listdir(directory):
+        if file_name.endswith('.rego'):
+            file_path = os.path.join(directory, file_name)
+            with open(file_path, 'r') as file:
+                for line in file:
+                    if tag in line and line.strip().startswith('# Tags:'):
+                        return file_name
     return None
 
 if __name__ == "__main__":
-    tag_to_find = sys.argv[1] if len(sys.argv) > 2 else 'instance'
-    policy_dir = sys.argv[2] if len(sys.argv) > 2 else '.'
-    policy_path = find_policy_by_tag(policy_dir, tag_to_find)
-    if policy_path:
-        print(policy_path)
+    policy_dir = sys.argv[1]
+    tag = sys.argv[2]
+    result = find_policy(policy_dir, tag)
+    if result:
+        print(result)
     else:
-        print("No policy file with specified tag found.", file=sys.stderr)
+        print("No policy file with specified tag found.")
         sys.exit(1)
