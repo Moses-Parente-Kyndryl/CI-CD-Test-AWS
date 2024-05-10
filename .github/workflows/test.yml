@@ -29,7 +29,6 @@ jobs:
             echo "select_policy.py is present."
           else
             echo "select_policy.py is not found."
-          fi
 
       - name: Cleanup macOS metadata files
         run: find ./policies -name '._*' -delete
@@ -64,12 +63,10 @@ jobs:
 
       - name: Download and Debug OPA Policies
         run: |
-          curl -L -o policies.tar.gz ${{ secrets.POLICY_URL }} -w "%{http_code} - %{content_type}\n"
-          echo "Downloaded file type:"
-          file policies.tar.gz
+          curl -L -o policies.tar.gz ${{ secrets.POLICY_URL }}
           mkdir -p policies
-          tar -xzf policies.tar.gz -C policies || echo "Failed to extract tar.gz"
-          echo "Contents of policies directory:"
+          tar -xzf policies.tar.gz -C policies
+          echo "Listing policies directory:"
           ls -alh ./policies
           echo "Displaying .rego file contents:"
           cat ./policies/*.rego
