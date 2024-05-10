@@ -29,7 +29,6 @@ jobs:
             echo "select_policy.py is present."
           else
             echo "select_policy.py is not found."
-          fi
 
       - name: Cleanup macOS metadata files
         run: find ./policies -name '._*' -delete
@@ -69,6 +68,10 @@ jobs:
           file policies.tar.gz
           mkdir -p policies
           tar -xzf policies.tar.gz -C policies || echo "Failed to extract tar.gz"
+          echo "Contents of policies directory:"
+          ls -alh ./policies
+          echo "Displaying .rego file contents:"
+          cat ./policies/*.rego
 
       - name: Install Dependencies
         run: |
@@ -79,6 +82,10 @@ jobs:
         run: |
           policy_file=$(python ./select_policy.py ./policies 'instance')
           echo "Policy File: $policy_file"
+          if [ -z "$policy_file" ]; then
+            echo "No policy file found with the specified tag."
+            exit 1
+          fi
           echo "::set-output name=policy_path::$policy_file"
 
       - name: OPA Policy Evaluation
