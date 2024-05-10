@@ -24,8 +24,12 @@ jobs:
         run: |
           echo "Listing root directory:"
           ls -alh
-          echo "Listing scripts directory if it exists:"
-          ls -alh ./scripts/
+          echo "Checking if select_policy.py exists:"
+          if [ -f ./select_policy.py ]; then
+            echo "select_policy.py is present."
+          else
+            echo "select_policy.py is not found."
+          fi
 
       - name: Cleanup macOS metadata files
         run: find ./policies -name '._*' -delete
@@ -73,7 +77,7 @@ jobs:
       - name: Select OPA Policy Using Tags
         id: select_policy
         run: |
-          policy_file=$(python ./scripts/select_policy.py ./policies 'instance')
+          policy_file=$(python ./select_policy.py ./policies 'instance')
           echo "Policy File: $policy_file"
           echo "::set-output name=policy_path::$policy_file"
 
