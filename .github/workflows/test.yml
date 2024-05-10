@@ -54,7 +54,7 @@ jobs:
       - name: Download and Unpack OPA Policies
         run: |
           curl -L -o policies.tar.gz ${{ secrets.POLICY_URL }}
-          mkdir policies
+          mkdir -p policies  # Use -p to avoid error if the directory already exists
           tar -xzf policies.tar.gz -C policies
 
       - name: Install Dependencies
