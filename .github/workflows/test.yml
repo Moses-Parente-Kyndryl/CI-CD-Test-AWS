@@ -29,6 +29,7 @@ jobs:
             echo "select_policy.py is present."
           else
             echo "select_policy.py is not found."
+          fi
 
       - name: Cleanup macOS metadata files
         run: find ./policies -name '._*' -delete
