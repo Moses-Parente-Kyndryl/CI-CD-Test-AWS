@@ -51,11 +51,13 @@ jobs:
           curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64
           chmod +x opa
 
-      - name: Download and Unpack OPA Policies
+      - name: Download and Debug OPA Policies
         run: |
-          curl -L -o policies.tar.gz ${{ secrets.POLICY_URL }}
-          mkdir -p policies  # Use -p to avoid error if the directory already exists
-          tar -xzf policies.tar.gz -C policies
+          curl -L -o policies.tar.gz ${{ secrets.POLICY_URL }} -w "%{http_code} - %{content_type}\n"
+          echo "Downloaded file type:"
+          file policies.tar.gz
+          mkdir -p policies
+          tar -xzf policies.tar.gz -C policies || echo "Failed to extract tar.gz"
 
       - name: Install Dependencies
         run: |
